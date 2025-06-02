@@ -1,10 +1,9 @@
 import os
 import re
 
-# Set this to the path where your files are located
-directory = '/path/to/your/files'
+# Set this to the path where your files are 
+directory = r"C:\Users\jinfa\Desktop\Dr. Newman CUNY\NonBuggedAudio"
 
-# Regular expression to match the desired pattern
 pattern = re.compile(r'^conyce_aligned_(.+)\.wav$')
 
 for filename in os.listdir(directory):
