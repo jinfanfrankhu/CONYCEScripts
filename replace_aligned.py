@@ -2,7 +2,7 @@ import os
 import re
 
 # Set this to the path where your files are located
-directory = '/path/to/your/files'
+directory = r"C:\Users\jinfa\Desktop\CONYCE\NonBuggedAudio"    
 
 # Regular expression to match the simplified pattern
 pattern = re.compile(r'^conyce_(?!aligned_)(.+)\.wav$')
