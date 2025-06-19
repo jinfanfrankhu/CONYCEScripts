@@ -32,5 +32,12 @@ def transcribe_to_tsv(audio_path):
 
 # Example usage
 if __name__ == "__main__":
-    audio_file = r"C:\Users\jinfa\Desktop\CONYCE\SP19\conyce_bh_sp19_AaravDengla_all_interview_mod_050825.wav"
-    transcribe_to_tsv(audio_file)
+    audio_files = [r"C:\Users\jinfa\Desktop\CONYCE\SP19\conyce_bh_sp19_AlexisArroyo_all_interview_mod_061925.wav",
+                   r"C:\Users\jinfa\Desktop\CONYCE\SP19\conyce_bh_sp19_FrancescaCimieri_all_interview_mod_061925.wav",
+                   r"C:\Users\jinfa\Desktop\CONYCE\SP19\conyce_bh_sp19_JennieCastillo_all_interview_mod_061925.wav",
+                   r"C:\Users\jinfa\Desktop\CONYCE\SP19\conyce_bh_sp19_JimmyCandy_all_interview_mod_061925.wav",
+                   r"C:\Users\jinfa\Desktop\CONYCE\SP19\conyce_bh_sp19_MickeyGarplume_all_interview_mod_061925.wav",
+                   r"C:\Users\jinfa\Desktop\CONYCE\SP19\conyce_bh_sp19_PandaBear_all_interview_mod_061925.wav",
+                   r"C:\Users\jinfa\Desktop\CONYCE\SP19\conyce_bh_sp19_VivianSmith_all_interview_mod_061925.wav",]
+    for audio_file in audio_files:
+        transcribe_to_tsv(audio_file)
