@@ -11,7 +11,9 @@ MFA_DICTIONARY = "english_us_mfa"
 MFA_ACOUSTIC_MODEL = "english_us_mfa"
 
 # ---------- TRANSCRIPTION ----------
-def transcribe_audio(audio_path):
+def transcribe_audio(audio_path, verbosity=0):
+    if verbosity == 1:
+        print(f"Transcribing {audio_path} with model {MODEL_NAME}...")
     model = whisper.load_model(MODEL_NAME)
     result = model.transcribe(audio_path, language="English", task="transcribe")
 
@@ -26,11 +28,12 @@ def transcribe_audio(audio_path):
 
     with open(txt_file, "w", encoding="utf-8") as f:
         f.write(result['text'])
-
+    if verbosity == 1:
+        print(f"Transcription complete. Output saved to {txt_file}")
     return txt_file
 
 # ---------- CLEANING ----------
-def clean_transcript(txt_file):
+def clean_transcript(txt_file, verbosity=0):
     with open(txt_file, "r", encoding="utf-8") as f:
         text = f.read()
 
@@ -42,48 +45,56 @@ def clean_transcript(txt_file):
     processed_file = txt_file.replace(".txt", "_processed.txt")
     with open(processed_file, "w", encoding="utf-8") as f:
         f.write(cleaned_text)
-
+    if verbosity == 1:
+        print(f"Cleaned transcript saved to {processed_file}")
     return processed_file
 
 # ---------- MFA PREPARATION ----------
-def prepare_for_mfa(audio_path, processed_txt_file):
+def prepare_for_mfa(audio_path, processed_txt_file, verbosity=0):
     target_txt_file = audio_path.replace(".wav", ".txt")
     if os.path.abspath(processed_txt_file) != os.path.abspath(target_txt_file):
         if os.path.exists(target_txt_file):
             os.remove(target_txt_file)
         shutil.move(processed_txt_file, target_txt_file)
-    print(f"Prepared {target_txt_file} for MFA")
+    if verbosity == 1:
+        print(f"Prepared {target_txt_file} for MFA")
 
 # ---------- MFA ALIGNMENT ----------
-def run_mfa(folder):
+def run_mfa(folder, verbosity=0):
     output_path = os.path.join(folder, "MFA_output")
     os.makedirs(output_path, exist_ok=True)
 
-    subprocess.run([
-        "mfa", "align",
-        folder, MFA_DICTIONARY, MFA_ACOUSTIC_MODEL, output_path
-    ], check=True)
+    if verbosity == 1:
+        subprocess.run([
+            "C:\\Users\\jinfa\\Desktop\\CONYCE\\Python Code\\verbosemfa.bat",
+            folder, MFA_DICTIONARY, MFA_ACOUSTIC_MODEL, output_path
+        ], check=True)
+        print(f"Alignment complete. TextGrids saved to: {output_path}")
 
-    print(f"Alignment complete. TextGrids saved to: {output_path}")
+    else:
+        subprocess.run([
+            "C:\\Users\\jinfa\\Desktop\\CONYCE\\Python Code\\quietmfa.bat",
+            folder, MFA_DICTIONARY, MFA_ACOUSTIC_MODEL, output_path
+        ], check=True)
+        print(f"Alignment complete. TextGrids saved to: {output_path}")
 
 # ---------- PIPELINE ORCHESTRATOR ----------
-def batch_pipeline(folder):
+def batch_pipeline(folder, verbosity=0):
     audio_files = [f for f in os.listdir(folder) if f.endswith(".wav")]
     
     for audio_file in audio_files:
         full_audio_path = os.path.join(folder, audio_file)
-        print(f"Processing: {audio_file}")
 
-        txt_file = transcribe_audio(full_audio_path)
-        processed_txt_file = clean_transcript(txt_file)
-        prepare_for_mfa(full_audio_path, processed_txt_file)
+        txt_file = transcribe_audio(full_audio_path, verbosity)
+        processed_txt_file = clean_transcript(txt_file, verbosity)
+        prepare_for_mfa(full_audio_path, processed_txt_file, verbosity)
 
     print("All files transcribed and cleaned. Starting MFA alignment...")
-    run_mfa(folder)
+    run_mfa(folder, verbosity)
 
 # ---------- ENTRY POINT ----------
 if __name__ == "__main__":
     folder = r"C:\Users\jinfa\Desktop\CONYCE\TestAaravDengla"  
-    batch_pipeline(folder)
+    batch_pipeline(folder, verbosity=1)
 
 
