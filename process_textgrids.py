@@ -46,24 +46,21 @@ import textgrid
 def df_to_textgrid(df, output_path):
     '''
     Convert a pandas DataFrame back to a TextGrid file.
-    The DataFrame must contain: tier, xmin, xmax, text columns.
     '''
     tg = textgrid.TextGrid()
-    
-    # Get all unique tiers
-    tiers = df['tier'].unique()
-    
+
     # Determine total time bounds
     min_time = df['xmin'].min()
     max_time = df['xmax'].max()
     tg.minTime = min_time
     tg.maxTime = max_time
 
-    for tier_name in tiers:
+    # Build new tiers from scratch
+    for tier_name in df['tier'].unique():
         tier_df = df[df['tier'] == tier_name].sort_values(by='xmin')
         tier = textgrid.IntervalTier(name=tier_name, minTime=min_time, maxTime=max_time)
         for _, row in tier_df.iterrows():
-            tier.add(row['xmin'], row['xmax'], row['text'])
+            tier.add(float(row['xmin']), float(row['xmax']), str(row['text']))
         tg.append(tier)
 
     tg.write(output_path)
@@ -76,7 +73,5 @@ if __name__ == "__main__":
     df = textgrid_to_df(file_path)
     df = remove_empty_entries(df)
     df = reassign_interviewer(df)
-    output_path = file_path + "_processed.TextGrid"
+    output_path = file_path + ".TextGrid"
     df_to_textgrid(df, output_path)
-    
-    
