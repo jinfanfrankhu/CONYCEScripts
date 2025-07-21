@@ -8,7 +8,7 @@ import shutil
 # ---------- CONFIG ----------
 MODEL_NAME = "turbo"  # or "base", "tiny" depending on your hardware
 MFA_DICTIONARY = "english_us_mfa"
-MFA_ACOUSTIC_MODEL = "english_us_mfa"
+MFA_ACOUSTIC_MODEL = "english_mfa"
 
 # ---------- TRANSCRIPTION ----------
 def transcribe_audio(audio_path, verbosity=0):
@@ -37,7 +37,7 @@ def clean_transcript(txt_file, verbosity=0):
     with open(txt_file, "r", encoding="utf-8") as f:
         text = f.read()
 
-    punctuation_to_remove = string.punctuation.replace("?", "")
+    punctuation_to_remove = string.punctuation.replace("?", "").replace("'", "")
     translator = str.maketrans('', '', punctuation_to_remove)
     cleaned_text = text.translate(translator).lower()
     cleaned_text = ' '.join(cleaned_text.split())
@@ -94,7 +94,9 @@ def batch_pipeline(folder, verbosity=0):
 
 # ---------- ENTRY POINT ----------
 if __name__ == "__main__":
-    folder = r"C:\Users\jinfa\Desktop\CONYCE\TestAaravDengla"  
-    batch_pipeline(folder, verbosity=1)
+    folder = r"C:\Users\jinfa\Desktop\CONYCE\Wuhanese"  
+    #batch_pipeline(folder, verbosity=1)
+
+    run_mfa(folder, verbosity=1)
 
 
